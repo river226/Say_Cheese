@@ -3,8 +3,13 @@ package river.soft.main;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 
 import javax.swing.*;
+
+import com.googlecode.javacv.cpp.opencv_highgui;
+import com.googlecode.javacv.cpp.opencv_core.IplImage;
+import com.googlecode.javacv.cpp.opencv_highgui.CvCapture;
 
 public class GUI extends JFrame implements KeyListener{
 
@@ -14,8 +19,11 @@ public class GUI extends JFrame implements KeyListener{
 	private static final long serialVersionUID = 1L;
 	// screen is customized to match the resolution and orientation of the monitor
 	private Dimension screensize; // height and width of the window
-	private Cam video;
 	private Settings set;
+	private String[] args;
+	private Cam vid;
+	private BufferedImage image;
+	private boolean end = false;
 	
 	public GUI() throws Exception {
 		
@@ -27,10 +35,9 @@ public class GUI extends JFrame implements KeyListener{
 	}
 
 	public void buildGUI() {
-		set = new Settings();
-		video = new Cam(set);
-		video.screen();
-		//this.add(video.getCam());
+		//set = new Settings();
+		this.add(vid = new Cam());
+		vid.screen();
 	}
 
 	public void breakGUI() throws Exception {
@@ -41,10 +48,11 @@ public class GUI extends JFrame implements KeyListener{
 	public void keyPressed(KeyEvent e){
 		switch(e.getKeyChar()) {
 		case 'q':
+			end = true;
 			System.exit(0); // break is useless here
 		case 's':
 			// open settings
-			video.setSettings(set);
+			//video.setSettings(set);
 			break;
 		case 'p':
 			// take picture
@@ -68,4 +76,32 @@ public class GUI extends JFrame implements KeyListener{
 		// ignore	
 	}
 
+	private class Cam extends JPanel {
+		public void screen() {
+			CvCapture capture = opencv_highgui.cvCreateCameraCapture(0);
+
+			opencv_highgui.cvSetCaptureProperty(capture, opencv_highgui.CV_CAP_PROP_FRAME_HEIGHT, 720);
+			opencv_highgui.cvSetCaptureProperty(capture, opencv_highgui.CV_CAP_PROP_FRAME_WIDTH, 1280);
+
+			IplImage grabbedImage = opencv_highgui.cvQueryFrame(capture);
+
+			while ((grabbedImage = opencv_highgui.cvQueryFrame(capture)) != null) {
+				this.setImage(grabbedImage.getBufferedImage());
+				if(end) break;
+			}
+
+			opencv_highgui.cvReleaseCapture(capture);
+		}
+
+		private void setImage(BufferedImage img) {
+			image = img;
+			repaint();
+		}
+
+		protected void paintComponent(Graphics g) {
+			//vid.paintComponent(g);
+			if (image != null)      // Not efficient, but safer.
+				g.drawImage(image, 0, 0, this);
+		}
+	}
 }
