@@ -78,7 +78,7 @@ public class GUI extends JFrame implements KeyListener{
 
 	private class Cam extends JPanel {
 		public void screen() {
-			CvCapture capture = opencv_highgui.cvCreateCameraCapture(0);
+			CvCapture capture = opencv_highgui.cvCreateCameraCapture(1);
 
 			opencv_highgui.cvSetCaptureProperty(capture, opencv_highgui.CV_CAP_PROP_FRAME_HEIGHT, 720);
 			opencv_highgui.cvSetCaptureProperty(capture, opencv_highgui.CV_CAP_PROP_FRAME_WIDTH, 1280);

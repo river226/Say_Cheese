@@ -22,8 +22,8 @@ public class SayCheese {
 	public static void main(String[] args) {
 		try {
 			window = new GUI();
-			window.buildGUI();
 			window.setVisible(true);
+			window.buildGUI();
 		} catch (Exception e) {
 			System.exit(0);
 		}
