@@ -29,6 +29,7 @@ public class GUI extends JFrame implements KeyListener{
 	private BufferedImage image;
 	private ArrayList<Image> camRoll = new ArrayList<>();
 	private boolean end = false;
+	private BorderLayout layoutM;
 	
 	public GUI() throws Exception {
 		
@@ -37,11 +38,14 @@ public class GUI extends JFrame implements KeyListener{
 		this.setSize(screensize);
 		this.setUndecorated(true);
 		this.addKeyListener(this);
+		layoutM = new BorderLayout();
 	}
 
 	public void buildGUI() {
 		//set = new Settings();
 		this.add(vid = new Cam());
+		//layoutM.addLayoutComponent(vid = new Cam(), BorderLayout.CENTER);
+		//this.setLayout(layoutM);
 		vid.screen();
 	}
 
@@ -87,8 +91,14 @@ public class GUI extends JFrame implements KeyListener{
 	}
 
 	private class Cam extends JPanel {
+		
+		private BorderLayout layout = new BorderLayout();		
+		public Cam() {
+			super();
+		}
+		
 		public void screen() {
-			CvCapture capture = opencv_highgui.cvCreateCameraCapture(1);
+			CvCapture capture = opencv_highgui.cvCreateCameraCapture(0);
 
 			opencv_highgui.cvSetCaptureProperty(capture, opencv_highgui.CV_CAP_PROP_FRAME_HEIGHT, 720);
 			opencv_highgui.cvSetCaptureProperty(capture, opencv_highgui.CV_CAP_PROP_FRAME_WIDTH, 1280);
@@ -111,7 +121,8 @@ public class GUI extends JFrame implements KeyListener{
 		protected void paintComponent(Graphics g) {
 			//vid.paintComponent(g);
 			if (image != null)      // Not efficient, but safer.
-				g.drawImage(image, 0, 0, this);
+				g.drawImage(image, ((screensize.width - image.getWidth())/2), ((screensize.height - image.getHeight())/4), this);
 		}
+		
 	}
 }
