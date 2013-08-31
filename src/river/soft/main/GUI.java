@@ -4,7 +4,11 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import com.googlecode.javacv.cpp.opencv_highgui;
@@ -23,6 +27,7 @@ public class GUI extends JFrame implements KeyListener{
 	private String[] args;
 	private Cam vid;
 	private BufferedImage image;
+	private ArrayList<Image> camRoll = new ArrayList<>();
 	private boolean end = false;
 	
 	public GUI() throws Exception {
@@ -56,6 +61,11 @@ public class GUI extends JFrame implements KeyListener{
 			break;
 		case 'p':
 			// take picture
+			File outputfile = new File("image.jpg");
+			try {
+				ImageIO.write(image, "jpg", outputfile);
+			} catch (IOException e1) {
+			}
 			break;
 		case 'v':
 			// take video
