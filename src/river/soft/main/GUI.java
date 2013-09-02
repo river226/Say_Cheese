@@ -28,16 +28,21 @@ public class GUI extends JFrame implements KeyListener{
 	private Cam vid;
 	private BufferedImage image;
 	private ArrayList<Image> camRoll = new ArrayList<>();
+	private int photoCount, curPhoto, photoSet;
+	private long waitPeriod = 3000;
 	private boolean end = false;
 	private BorderLayout layoutM;
-	
+
 	public GUI() throws Exception {
-		
+
 		// get dimensions
 		screensize = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setSize(screensize);
 		this.setUndecorated(true);
 		this.addKeyListener(this);
+		photoCount = 6;
+		curPhoto = 0;
+		photoSet = 1;
 		layoutM = new BorderLayout();
 	}
 
@@ -65,11 +70,19 @@ public class GUI extends JFrame implements KeyListener{
 			break;
 		case 'p':
 			// take picture
-			File outputfile = new File("image.jpg");
-			try {
-				ImageIO.write(image, "jpg", outputfile);
-			} catch (IOException e1) {
+			while(curPhoto < photoCount){
+				File outputfile = new File("Photo_Set_" + photoSet + "_Num_" + curPhoto + ".jpg");
+				curPhoto++;
+
+				try {
+					ImageIO.write(image, "jpg", outputfile);
+					Thread.sleep(waitPeriod);
+				} catch (IOException | InterruptedException e1) {
+				}
+				
 			}
+			photoSet++;
+			curPhoto = 0;
 			break;
 		case 'v':
 			// take video
@@ -91,12 +104,12 @@ public class GUI extends JFrame implements KeyListener{
 	}
 
 	private class Cam extends JPanel {
-		
+
 		private BorderLayout layout = new BorderLayout();		
 		public Cam() {
 			super();
 		}
-		
+
 		public void screen() {
 			CvCapture capture = opencv_highgui.cvCreateCameraCapture(0);
 
@@ -123,6 +136,6 @@ public class GUI extends JFrame implements KeyListener{
 			if (image != null)      // Not efficient, but safer.
 				g.drawImage(image, ((screensize.width - image.getWidth())/2), ((screensize.height - image.getHeight())/4), this);
 		}
-		
+
 	}
 }
