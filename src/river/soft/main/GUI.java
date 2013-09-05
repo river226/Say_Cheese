@@ -29,14 +29,11 @@ public class GUI extends JFrame implements KeyListener{
 	
 	private Dimension screensize; // height and width of the window
 	private Settings set; // Not implemented Yet
-	private Cam vid; 
-	private BufferedImage image;
-	private ArrayList<Image> camRoll = new ArrayList<>();
+	private Picture takePic;
+	private Cam vid;
 	private int photoCount, curPhoto, photoSet;
-	private long waitPeriod = 3000;
-	private boolean end = false;
-	private JLabel left;
 	private BorderLayout layoutM;
+	private Thread pic, print, film;
 
 	public GUI() throws Exception {
 
@@ -45,15 +42,15 @@ public class GUI extends JFrame implements KeyListener{
 		this.setSize(screensize);
 		this.setUndecorated(true);
 		this.addKeyListener(this);
-		photoCount = 6;
-		curPhoto = 0;
-		photoSet = 1;
-		left = new JLabel((photoCount-curPhoto) + " Photos left");
+		photoCount = pc;
+		photoSet = ps;
+		vid = new Cam(screensize);
+		takePic = new Picture(3000, photoCount, photoSet, vid, this);
 		layoutM = new BorderLayout();
 	}
 
 	public void buildGUI() {
-		this.add(vid = new Cam(screensize));
+		this.add(vid);
 		vid.screen();
 	}
 
@@ -65,7 +62,6 @@ public class GUI extends JFrame implements KeyListener{
 	public void keyPressed(KeyEvent e){
 		switch(e.getKeyChar()) {
 		case 'q':
-			end = true;
 			System.exit(0); // break is useless here
 		case 's':
 			// open settings
@@ -73,19 +69,9 @@ public class GUI extends JFrame implements KeyListener{
 			break;
 		case 'p':
 			// take picture
-			while(curPhoto < photoCount){
-				File outputfile = new File("Photo_Set_" + photoSet + "_Num_" + curPhoto + ".jpg");
-				curPhoto++;
-
-				try {
-					ImageIO.write(vid.getImage(), "jpg", outputfile);
-					Thread.sleep(waitPeriod);
-				} catch (IOException | InterruptedException e1) {
-				}
-				
-			}
-			photoSet++;
-			curPhoto = 0;
+			pic = new Thread(takePic);
+			pic.run();
+			
 			break;
 		case 'v':
 			// take video
