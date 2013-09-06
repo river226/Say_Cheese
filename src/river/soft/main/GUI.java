@@ -42,8 +42,9 @@ public class GUI extends JFrame implements KeyListener{
 		this.setSize(screensize);
 		this.setUndecorated(true);
 		this.addKeyListener(this);
-		photoCount = pc;
-		photoSet = ps;
+		photoCount = 6;
+		photoSet = 1;
+		curPhoto = 0;
 		vid = new Cam(screensize);
 		takePic = new Picture(3000, photoCount, photoSet, vid, this);
 		layoutM = new BorderLayout();
@@ -69,9 +70,8 @@ public class GUI extends JFrame implements KeyListener{
 			break;
 		case 'p':
 			// take picture
-			pic = new Thread(takePic);
-			pic.run();
-			
+			SwingUtilities.invokeLater(new Picture(3000, photoCount, photoSet, vid, this));
+			photoSet++;
 			break;
 		case 'v':
 			// take video
