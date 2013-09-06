@@ -62,33 +62,25 @@ public class GUI extends JFrame implements KeyListener{
 	@Override
 	public void keyPressed(KeyEvent e){
 		switch(e.getKeyChar()) {
-		case 'q':
+		case 'q': // Close Program
 			System.exit(0); // break is useless here
-		case 's':
-			// open settings
-			//video.setSettings(set);
+		case 's': // open settings
 			break;
-		case 'p':
-			// take picture
-			SwingUtilities.invokeLater(new Picture(3000, photoCount, photoSet, vid, this));
+		case 'p': // take picture
+			pic = new Thread(new Picture(3000, photoCount, photoSet, vid, this));
+			SwingUtilities.invokeLater(pic);
 			photoSet++;
 			break;
-		case 'v':
-			// take video
+		case 'v': // take video
 			break;
-		default:
-			// ignore
+		default: // ignore
 			break;
 		}
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
-		// ignore
-	}
+	public void keyReleased(KeyEvent e) { /* ignore */ }
 
 	@Override
-	public void keyTyped(KeyEvent e) {
-		// ignore	
-	}
+	public void keyTyped(KeyEvent e) { /* ignore */ }
 }
