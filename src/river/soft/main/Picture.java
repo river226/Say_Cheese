@@ -4,8 +4,9 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.SwingWorker;
 
-public class Picture implements Runnable {
+public class Picture extends SwingWorker<GUI, Cam> {
 
 	private int photoSet, photoCount;
 	private Cam vid;
@@ -20,8 +21,7 @@ public class Picture implements Runnable {
 		gui = g;
 	}
 
-	@Override
-	public void run() {
+	public void process() {
 		
 		int curPhoto = 0;
 		
@@ -31,13 +31,19 @@ public class Picture implements Runnable {
 
 			try {
 				ImageIO.write(vid.getImage(), "jpg", outputfile);
-				Thread.sleep(waitPeriod);
+				doInBackground();
 			} catch (IOException | InterruptedException e1) {
-			}
+			} catch (Exception e) { /* DO NOTHING */ }
 
 		}
 		photoSet++;
 		curPhoto = 0;
+	}
+
+	@Override
+	protected GUI doInBackground() throws Exception {
+		Thread.sleep(waitPeriod);
+		return null;
 	}
 
 }

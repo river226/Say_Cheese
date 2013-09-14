@@ -1,18 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="lib/javacv-bin/samples"/>
-	<classpathentry kind="src" path="lib/jna-3.5.0/contrib/alphamaskdemo"/>
-	<classpathentry kind="src" path="lib/jna-3.5.0/contrib/balloonmanagerdemo"/>
-	<classpathentry kind="src" path="lib/jna-3.5.0/contrib/balloontips"/>
-	<classpathentry kind="src" path="lib/jna-3.5.0/contrib/dnddemo"/>
-	<classpathentry kind="src" path="lib/jna-3.5.0/contrib/ntservice/src"/>
-	<classpathentry kind="src" path="lib/jna-3.5.0/contrib/platform/src"/>
-	<classpathentry kind="src" path="lib/jna-3.5.0/contrib/platform/test"/>
-	<classpathentry kind="src" path="lib/jna-3.5.0/contrib/shapedwindowdemo"/>
-	<classpathentry kind="src" path="lib/jna-3.5.0/contrib/w32keyhook"/>
-	<classpathentry kind="src" path="lib/jna-3.5.0/contrib/x11/src"/>
-	<classpathentry kind="src" path="lib/jna-3.5.0/src"/>
-	<classpathentry kind="src" path="lib/jna-3.5.0/test"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="lib/gstreamer-java-1.5.jar"/>
 	<classpathentry kind="lib" path="lib/javacv-bin/javacpp.jar"/>
@@ -92,5 +79,9 @@
 	<classpathentry kind="lib" path="lib/jna-3.5.0/www/demo/win32-amd64.jar"/>
 	<classpathentry kind="lib" path="lib/jna-3.5.0/www/demo/win32-x86.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/home/river/dev/SayCheeseJava/lib/javacv-bin/javacpp.jar"/>
+	<classpathentry kind="lib" path="/home/river/dev/SayCheeseJava/lib/javacv-bin/javacv.jar"/>
+	<classpathentry kind="lib" path="/home/river/dev/SayCheeseJava/lib/javacv-bin/javacv-linux-x86_64.jar"/>
+	<classpathentry kind="lib" path="/home/river/dev/SayCheeseJava/lib/jna-3.5.0/lib/native/linux-ia64.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

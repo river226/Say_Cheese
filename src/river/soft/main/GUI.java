@@ -52,6 +52,7 @@ public class GUI extends JFrame implements KeyListener{
 
 	public void buildGUI() {
 		this.add(vid);
+		//vid.setVisible(true);
 		vid.screen();
 	}
 
