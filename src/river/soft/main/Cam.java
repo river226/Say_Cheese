@@ -1,8 +1,10 @@
 package river.soft.main;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 
@@ -18,6 +20,8 @@ public class Cam extends JPanel {
 	private BufferedImage image;
 	private Dimension screensize;
 	private boolean end = false;
+	private boolean flashed =  false;
+	private int level = 20;
 	
 	
 	public Cam(Dimension ss) {
@@ -57,7 +61,12 @@ public class Cam extends JPanel {
 	}
 
 	public BufferedImage getImage() {
-		return image;
+		BufferedImage temp = image;
+		flash();
+		return temp;
 	}
-
+	
+	public void flash() {
+		//flashed = true;
+	}
 }

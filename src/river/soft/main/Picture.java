@@ -1,49 +1,45 @@
 package river.soft.main;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.SwingWorker;
 
-public class Picture extends SwingWorker<GUI, Cam> {
+public class Picture extends SwingWorker<ArrayList<BufferedImage>, Integer> {
 
-	private int photoSet, photoCount;
+	private int maxPhoto;
 	private Cam vid;
 	private long waitPeriod;
-	private GUI gui;
+	private ArrayList<BufferedImage> image = new ArrayList<>();
 	
-	public Picture(int i, int pc, int ps, Cam v, GUI g) {
+	public Picture(int i, int mp, Cam v) {
 		waitPeriod = i;
-		photoCount = pc;
-		photoSet = ps;
+		maxPhoto = mp;
 		vid = v;
-		gui = g;
-	}
-
-	public void process() {
-		
-		int curPhoto = 0;
-		
-		while(curPhoto < photoCount){
-			File outputfile = new File("Photo_Set_" + photoSet + "_Num_" + curPhoto + ".jpg");
-			curPhoto++;
-
-			try {
-				ImageIO.write(vid.getImage(), "jpg", outputfile);
-				doInBackground();
-			} catch (IOException | InterruptedException e1) {
-			} catch (Exception e) { /* DO NOTHING */ }
-
-		}
-		photoSet++;
-		curPhoto = 0;
 	}
 
 	@Override
-	protected GUI doInBackground() throws Exception {
-		Thread.sleep(waitPeriod);
-		return null;
+	protected  ArrayList<BufferedImage> doInBackground() throws Exception {
+		int curPhoto = 0;
+		
+		while(curPhoto < maxPhoto){
+			curPhoto++;
+			try {
+				image.add(vid.getImage());
+				this.setProgress((Integer)((curPhoto/maxPhoto)*100));
+				Thread.sleep(waitPeriod);
+			} catch (InterruptedException e1) { /* DO NOTHING */ }
+
+		}
+		
+		return image;
+	}
+	
+	public void setMaxPhoto(int m) {
+		maxPhoto = m;
 	}
 
 }
