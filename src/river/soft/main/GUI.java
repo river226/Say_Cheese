@@ -13,8 +13,11 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
 import com.googlecode.javacv.cpp.opencv_highgui;
 import com.googlecode.javacv.cpp.opencv_core.IplImage;
 import com.googlecode.javacv.cpp.opencv_highgui.CvCapture;
@@ -68,9 +71,23 @@ public class GUI extends JFrame implements KeyListener{
 		case 's': // open settings
 			break;
 		case 'p': // take picture
-			//File outputfile = new File("Photo_Set_" + photoSet + "_Num_" + curPhoto + ".jpg");
-			//ImageIO.write(vid.getImage(), "jpg", outputfile);
+			
 			takePic.execute();
+			while(!takePic.isDone()){
+				/* Do Nothing */
+			}
+			try {
+				ArrayList<BufferedImage> p = takePic.get();
+				curPhoto = 0;
+				for(BufferedImage i : p) {
+					File outputfile = new File("Photo_Set_" + photoSet + "_Num_" + curPhoto + ".jpg");
+					ImageIO.write(i, "jpg", outputfile);
+					curPhoto++;
+				}
+			} catch (InterruptedException | ExecutionException | IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			photoSet++;
 			break;
 		case 'v': // take video
