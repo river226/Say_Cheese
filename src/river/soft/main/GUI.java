@@ -10,6 +10,8 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,8 +30,8 @@ public class GUI extends JFrame implements KeyListener{
 	 * Keep eclipse happy
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	
+
+
 	private Dimension screensize; // height and width of the window
 	private Settings set; // Not implemented Yet
 	private Picture takePic;
@@ -49,7 +51,6 @@ public class GUI extends JFrame implements KeyListener{
 		photoSet = 1;
 		curPhoto = 0;
 		vid = new Cam(screensize);
-		takePic = new Picture(3000, photoCount, vid);
 		layoutM = new BorderLayout();
 	}
 
@@ -62,6 +63,10 @@ public class GUI extends JFrame implements KeyListener{
 	public void breakGUI() throws Exception {
 		throw new Exception();
 	}
+	
+	private void setCount(int progress) {
+		// TODO Auto-generated method stub
+	}
 
 	@Override
 	public void keyPressed(KeyEvent e){
@@ -71,29 +76,40 @@ public class GUI extends JFrame implements KeyListener{
 		case 's': // open settings
 			break;
 		case 'p': // take picture
-			
-			takePic.execute();
-			while(!takePic.isDone()){
-				/* Do Nothing */
+			if(takePic == null || SwingWorker.StateValue.DONE == takePic.getState()) {
+
+				takePic = new Picture(3000, photoCount, vid);
+				takePic.execute();
+				takePic.addPropertyChangeListener(new PropertyChangeListener(){
+
+					@Override
+					public void propertyChange(PropertyChangeEvent arg0) {
+						if(SwingWorker.StateValue.STARTED == takePic.getState()) {
+							setCount(takePic.getProgress());
+						} else if (SwingWorker.StateValue.DONE == takePic.getState()){
+							
+							try {
+								ArrayList<BufferedImage> p = takePic.get();
+								curPhoto = 0;
+								
+								for(BufferedImage i : p) {
+									File outputfile = new File("Photo_Set_" + photoSet + "_Num_" + curPhoto + ".jpg");
+									ImageIO.write(i, "jpg", outputfile);
+									curPhoto++;
+								}
+								
+								photoSet++;
+							} catch (InterruptedException | ExecutionException | IOException e1) { /* Do Nothing */}
+						}
+
+					}
+					});
+
 			}
-			try {
-				ArrayList<BufferedImage> p = takePic.get();
-				curPhoto = 0;
-				for(BufferedImage i : p) {
-					File outputfile = new File("Photo_Set_" + photoSet + "_Num_" + curPhoto + ".jpg");
-					ImageIO.write(i, "jpg", outputfile);
-					curPhoto++;
-				}
-			} catch (InterruptedException | ExecutionException | IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			photoSet++;
 			break;
 		case 'v': // take video
 			break;
-		default: // ignore
-			break;
+		default: /* ignore */ break;
 		}
 	}
 
