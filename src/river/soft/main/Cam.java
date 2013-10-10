@@ -7,9 +7,11 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
-
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
-
+import river.soft.media.*;
 import com.googlecode.javacv.cpp.opencv_core.IplImage;
 import com.googlecode.javacv.cpp.opencv_highgui;
 import com.googlecode.javacv.cpp.opencv_highgui.CvCapture;
@@ -35,6 +37,7 @@ public class Cam extends JPanel {
 
 	public void screen() {
 		CvCapture capture = opencv_highgui.cvCreateCameraCapture(0);
+		
 
 		opencv_highgui.cvSetCaptureProperty(capture, opencv_highgui.CV_CAP_PROP_FRAME_HEIGHT, 720);
 		opencv_highgui.cvSetCaptureProperty(capture, opencv_highgui.CV_CAP_PROP_FRAME_WIDTH, 1280);
@@ -42,7 +45,8 @@ public class Cam extends JPanel {
 		IplImage grabbedImage = opencv_highgui.cvQueryFrame(capture);
 
 		while ((grabbedImage = opencv_highgui.cvQueryFrame(capture)) != null) {
-			this.setImage(grabbedImage.getBufferedImage());
+			if(flashed) flash();
+			else this.setImage(grabbedImage.getBufferedImage());
 			if(end) break;
 		}
 
@@ -62,11 +66,12 @@ public class Cam extends JPanel {
 
 	public BufferedImage getImage() {
 		BufferedImage temp = image;
-		flash();
+		flashed = true;
 		return temp;
 	}
 	
 	public void flash() {
-		//flashed = true;
+		flashed = false;
 	}
+	
 }

@@ -47,6 +47,7 @@ public class GUI extends JFrame implements KeyListener{
 		this.setSize(screensize);
 		this.setUndecorated(true);
 		this.addKeyListener(this);
+		this.setBackground(Color.BLACK);
 		photoCount = 6;
 		photoSet = 1;
 		curPhoto = 0;
