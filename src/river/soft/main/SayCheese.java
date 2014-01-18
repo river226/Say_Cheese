@@ -19,10 +19,10 @@ public class SayCheese {
 	public static void main(String[] args) {
 		try {
 			window = new GUI();
-			window.setVisible(true);
-			window.buildGUI();
+			window.setVisible(true); // create the GUI Frame
+			window.buildGUI(); // pull up WebCam feed
 		} catch (Exception e) {
-			System.exit(0);
+			System.exit(0); // ** need to log **
 		}
 	}
 

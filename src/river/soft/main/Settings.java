@@ -1,5 +1,11 @@
 package river.soft.main;
 
+/**
+ * Setting panel for Say Cheese
+ * Will provide supported funtions, and provide 
+ * program defaults when it is complete
+ */
+
 import java.io.File;
 
 public class Settings {

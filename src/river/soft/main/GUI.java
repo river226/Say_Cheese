@@ -97,7 +97,7 @@ public class GUI extends JFrame implements KeyListener{
 		if(progress == 5000) // done taking pictures
 			this.setBackground(Color.BLACK);
 		else // Starting to take pictures 
-			this.setBackground(Color.WHITE);
+			this.setBackground(Color.GRAY);
 	}
 
 	@Override
@@ -123,9 +123,10 @@ public class GUI extends JFrame implements KeyListener{
 
 					@Override
 					public void propertyChange(PropertyChangeEvent arg0) { // Listen for SwingWorker state changes
+						setCount(takePic.getProgress()); // Change Background color
 						if (SwingWorker.StateValue.DONE == takePic.getState()){ // Cam is done taking pictures
 							snapPicture();
-						} // current implementation does not pay attention to anything else
+						} 
 
 					}
 				});
