@@ -1,11 +1,7 @@
 package river.soft.main;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-
-import javax.imageio.ImageIO;
 import javax.swing.SwingWorker;
 
 public class Picture extends SwingWorker<ArrayList<BufferedImage>, Integer> {

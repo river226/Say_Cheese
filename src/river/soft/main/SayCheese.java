@@ -4,9 +4,6 @@
  */
 package river.soft.main;
 
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-
 /**
  * @author river
  *

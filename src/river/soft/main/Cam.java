@@ -1,43 +1,47 @@
 package river.soft.main;
 
-import java.awt.BorderLayout;
+/**
+ * The cam class uses OpenCV wrapper JavaCV to pull video from a webcam
+ * It puts the video feed into a jpanel for easy integration to the greater GUI class
+ * @author river
+ */
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
-import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
+import java.awt.image.RescaleOp;
 import javax.swing.JPanel;
-import river.soft.media.*;
 import com.googlecode.javacv.cpp.opencv_core.IplImage;
 import com.googlecode.javacv.cpp.opencv_highgui;
 import com.googlecode.javacv.cpp.opencv_highgui.CvCapture;
 
 public class Cam extends JPanel {
+
+	/**
+	 * keep eclipse happy
+	 */
+	private static final long serialVersionUID = 1L;
 	
-	private BorderLayout layout = new BorderLayout();		
 	private BufferedImage image;
 	private Dimension screensize;
 	private boolean end = false;
 	private boolean flashed =  false;
-	private int level = 20;
-	
-	
+	private float[] scales = {1f, 1f, 1f, 0.5f};
+	private float[] offsets = new float[4];
 	public Cam(Dimension ss) {
 		super();
 		screensize = ss;
+		 new RescaleOp(scales, offsets, null);
 	}
-	
+
 	public void endcam() {
 		end = true;
 	}
 
 	public void screen() {
 		CvCapture capture = opencv_highgui.cvCreateCameraCapture(0);
-		
+
 
 		opencv_highgui.cvSetCaptureProperty(capture, opencv_highgui.CV_CAP_PROP_FRAME_HEIGHT, 720);
 		opencv_highgui.cvSetCaptureProperty(capture, opencv_highgui.CV_CAP_PROP_FRAME_WIDTH, 1280);
@@ -59,9 +63,9 @@ public class Cam extends JPanel {
 	}
 
 	protected void paintComponent(Graphics g) {
-		//vid.paintComponent(g);
-		if (image != null)      // Not efficient, but safer.
-			g.drawImage(image, ((screensize.width - image.getWidth())/2), ((screensize.height - image.getHeight())/4), this);
+		g.setColor(Color.WHITE);
+        if (image != null) // Not efficient, but safer.
+                g.drawImage(image, ((screensize.width - image.getWidth())/2), ((screensize.height - image.getHeight())/4), this);
 	}
 
 	public BufferedImage getImage() {
@@ -69,9 +73,18 @@ public class Cam extends JPanel {
 		flashed = true;
 		return temp;
 	}
-	
+
 	public void flash() {
-		flashed = false;
+		if(!flashed) {
+			
+	        flashed = true;
+		} else {
+			this.scales[3] = 0.75f;
+	        new RescaleOp(scales, offsets, null);
+			flashed = false;
+		}
+		
+		
 	}
-	
+
 }
