@@ -11,11 +11,18 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
+
 import com.googlecode.javacv.cpp.opencv_core.IplImage;
 import com.googlecode.javacv.cpp.opencv_highgui;
 import com.googlecode.javacv.cpp.opencv_highgui.CvCapture;
 
+@SuppressWarnings("unused")
 public class Cam extends JPanel {
 
 	/**
@@ -28,11 +35,23 @@ public class Cam extends JPanel {
 	private boolean end = false; // Tells the cam to stop
 	private float[] scales = {1f, 1f, 1f, 0.5f}; // default scales for the cam
 	private float[] offsets = new float[4]; // default setting
+	private BufferedImage flash;
 	
 	public Cam(Dimension ss) {
 		super();
 		screensize = ss;
 		new RescaleOp(scales, offsets, null);
+		createFlashCard();
+	}
+
+	/** 
+	 * pull in white image for flashing screen
+	 * ** fix ugly hard code **
+	 */
+	private void createFlashCard() {
+		try {
+			flash = ImageIO.read(new File("/home/river/dev/SayCheeseJava/src/river/soft/media/white720.png"));
+		} catch (IOException e) {/* Do Nothing */ }
 	}
 
 	/**
@@ -68,7 +87,6 @@ public class Cam extends JPanel {
 	 */
 	private void setImage(BufferedImage img) {
 		image = img;
-		// ** flash here **
 		repaint();
 	}
 
@@ -87,7 +105,15 @@ public class Cam extends JPanel {
 	 */
 	public BufferedImage getImage() {
 		BufferedImage temp = image;
+		flash();
 		return temp;	
+	}
+
+	/** 
+	 * Replace normal image with white one
+	 */
+	private void flash() {
+		setImage(flash);
 	}
 
 }

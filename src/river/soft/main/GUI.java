@@ -49,7 +49,7 @@ public class GUI extends JFrame implements KeyListener{
 		this.setSize(screensize);
 		this.setUndecorated(true);
 		this.addKeyListener(this);
-		this.setBackground(Color.BLACK);
+		this.setBackground(Color.white);
 		
 		// Set defaults for the program
 		setPhoto();
@@ -95,9 +95,9 @@ public class GUI extends JFrame implements KeyListener{
 	 */
 	private void setCount(int progress) {
 		if(progress == 5000) // done taking pictures
-			this.setBackground(Color.BLACK);
+			this.setBackground(Color.white);
 		else // Starting to take pictures 
-			this.setBackground(Color.GRAY);
+			this.setBackground(Color.black);
 	}
 
 	@Override
