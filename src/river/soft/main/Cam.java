@@ -50,7 +50,7 @@ public class Cam extends JPanel {
 	 */
 	private void createFlashCard() {
 		try {
-			flash = ImageIO.read(new File("/home/river/dev/SayCheeseJava/src/river/soft/media/white720.png"));
+			flash = ImageIO.read(new File("bin/river/soft/media/white720.png"));
 		} catch (IOException e) {/* Do Nothing */ }
 	}
 
