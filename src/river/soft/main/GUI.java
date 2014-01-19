@@ -158,8 +158,11 @@ public class GUI extends JFrame implements KeyListener{
 			curPhoto = 0; // reset current photo count
 
 			// cycle through and save photos to computer for later collection
-			for(BufferedImage i : p) { 
-				File outputfile = new File("Photo_Set_" + photoSet + "_Num_" + curPhoto + ".jpg");
+			for(BufferedImage i : p) {
+				File temp = new File("Pics/Set" + photoSet);
+				if(curPhoto == 0) temp.mkdirs();
+				
+				File outputfile = new File(temp.getAbsolutePath() + "/Photo_Set_" + photoSet + "_Num_" + curPhoto + ".jpg");
 				ImageIO.write(i, "jpg", outputfile); // ** Future versions will access settings for file name **
 				curPhoto++;
 			}
