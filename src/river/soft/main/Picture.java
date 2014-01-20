@@ -8,6 +8,7 @@ package river.soft.main;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+
 import javax.swing.SwingWorker;
 
 public class Picture extends SwingWorker<ArrayList<BufferedImage>, Integer> {
@@ -16,11 +17,34 @@ public class Picture extends SwingWorker<ArrayList<BufferedImage>, Integer> {
 	private Cam vid; // The WebCam Feed
 	private long waitPeriod; // Wait period between pictures, default 3 seconds
 	private ArrayList<BufferedImage> image = new ArrayList<>(); // All pictures taken
+	private String log; // String to write a log for the program issue
 	
 	public Picture(int i, int mp, Cam v) {
 		waitPeriod = i;
 		maxPhoto = mp;
 		vid = v;
+		log = makeLog();
+	}
+
+	/**
+	 * @return Caption for log
+	 */
+	private String makeLog() {
+		return "Picture Log \n===========\n";
+	}
+	
+	/**
+	 * @param message to be added to the log
+	 */
+	private void updateLog(String message) {
+		log += message + "\n";
+	}
+	
+	/**
+	 * @return get the log of any and all issues reported by this program
+	 */
+	public String getLog() {
+		return log;
 	}
 
 	@Override
@@ -33,10 +57,12 @@ public class Picture extends SwingWorker<ArrayList<BufferedImage>, Integer> {
 				image.add(vid.getImage()); // Pull image from WebCam feed
 				this.setProgress((Integer)((curPhoto/maxPhoto)*100)); 
 				Thread.sleep(waitPeriod); // wait to grab new picture
-			} catch (InterruptedException e1) { /* DO NOTHING */ } // ** Errors will be logged in the future **
+			} catch (InterruptedException e1) { 
+				updateLog(e1.getMessage());
+			} 
 
 		}
-		
+		updateLog("Set Finished at: " + System.nanoTime());
 		return image;
 	}
 	
@@ -46,6 +72,6 @@ public class Picture extends SwingWorker<ArrayList<BufferedImage>, Integer> {
 	 */
 	public void setMaxPhoto(int m) {
 		maxPhoto = m;
+		updateLog("max reset to: " + m);
 	}
-
 }

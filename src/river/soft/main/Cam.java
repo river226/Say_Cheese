@@ -35,13 +35,36 @@ public class Cam extends JPanel {
 	private boolean end = false; // Tells the cam to stop
 	private float[] scales = {1f, 1f, 1f, 0.5f}; // default scales for the cam
 	private float[] offsets = new float[4]; // default setting
-	private BufferedImage flash;
+	private BufferedImage flash; // Image to create a flash effect
+	private String log; // String to write a log for the program issue
 	
 	public Cam(Dimension ss) {
 		super();
 		screensize = ss;
+		log = makeLog();
 		new RescaleOp(scales, offsets, null);
 		createFlashCard();
+	}
+
+	/**
+	 * @return Caption for log
+	 */
+	private String makeLog() {
+		return "Cam Log \n=======\n";
+	}
+	
+	/**
+	 * @param message to be added to the log
+	 */
+	private void updateLog(String message) {
+		log += message + "\n";
+	}
+	
+	/**
+	 * @return get the log of any and all issues reported by this program
+	 */
+	public String getLog() {
+		return log;
 	}
 
 	/** 
@@ -51,7 +74,9 @@ public class Cam extends JPanel {
 	private void createFlashCard() {
 		try { 
 			flash = ImageIO.read(new File("bin/river/soft/media/white720.png"));
-		} catch (IOException e) {/* Do Nothing */ }
+		} catch (IOException e) {
+			log += e.getMessage() + "\n";
+		}
 	}
 
 	/**
@@ -89,16 +114,7 @@ public class Cam extends JPanel {
 		image = img;
 		repaint();
 	}
-
-	/**
-	 * Paint the image to the screen
-	 */
-	protected void paintComponent(Graphics g) {
-		g.setColor(Color.WHITE);
-        if (image != null) // Not efficient, but safer.
-                g.drawImage(image, ((screensize.width - image.getWidth())/2), ((screensize.height - image.getHeight())/4), this);
-	}
-
+	
 	/**
 	 * pull the current image for archive purposes
 	 * @return the current image as a BufferedImage
@@ -106,6 +122,7 @@ public class Cam extends JPanel {
 	public BufferedImage getImage() {
 		BufferedImage temp = image;
 		flash();
+		updateLog("Photo taken at: " + System.nanoTime());
 		return temp;	
 	}
 
@@ -116,4 +133,12 @@ public class Cam extends JPanel {
 		setImage(flash);
 	}
 
+	/**
+	 * Paint the image to the screen
+	 */
+	protected void paintComponent(Graphics g) {
+		g.setColor(Color.WHITE);
+        if (image != null) // Not efficient, but safer.
+                g.drawImage(image, ((screensize.width - image.getWidth())/2), ((screensize.height - image.getHeight())/4), this);
+	}
 }

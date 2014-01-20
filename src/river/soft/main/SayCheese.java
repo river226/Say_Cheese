@@ -22,7 +22,8 @@ public class SayCheese {
 			window.setVisible(true); // create the GUI Frame
 			window.buildGUI(); // pull up WebCam feed
 		} catch (Exception e) {
-			System.exit(0); // ** need to log **
+			System.exit(0); 
+			// Create Log
 		}
 	}
 

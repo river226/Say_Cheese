@@ -32,13 +32,14 @@ public class GUI extends JFrame implements KeyListener{
 
 
 	private Dimension screensize; // resolution of the monitor
-	@SuppressWarnings("unused")
 	private Settings set; // Not implemented Yet
-	private Picture takePic; // Handles pulling pictures from the cam
-	private Cam vid; // The video feed from the webcam
+	private Picture takePic; // Handles pulling pictures from the WebCam
+	private Cam vid; // The video feed from the WebCam
 	private int photoCount; // Number of photos in the set
 	private int curPhoto; // The current photo being saved
 	private int photoSet; // The current photo set for saving purposes
+	@SuppressWarnings("unused")
+	private String log; // String to write a log for the program issue
 
 	public GUI() throws Exception { // Default Builder of GUI
 
@@ -53,6 +54,8 @@ public class GUI extends JFrame implements KeyListener{
 		
 		// Set defaults for the program
 		setPhoto();
+		
+		log = makeLog();
 		
 		// Create Webcam feed
 		vid = new Cam(screensize);
@@ -71,27 +74,19 @@ public class GUI extends JFrame implements KeyListener{
 		curPhoto = 0;
 	}
 
-	/**
+		/**
 	 * Adds video feed to the GUI
 	 */
 	public void buildGUI() {
 		this.add(vid);
 		vid.screen(); // Activate Video
 	}
-
-	/**
-	 * Operation for closing down application safely
-	 * not currently used. remove?
-	 * @throws Exception
-	 */
-	public void breakGUI() throws Exception {
-		throw new Exception();
-	}
-
+	
 	/**
 	 * Changes the background color to indicate that 
-	 * the cam is currently taking pictures
+	 * the WebCam is currently taking pictures
 	 * @param progress
+	 * @throws Exception
 	 */
 	private void setCount(int progress) {
 		if(progress == 5000) // done taking pictures
@@ -99,12 +94,15 @@ public class GUI extends JFrame implements KeyListener{
 		else // Starting to take pictures 
 			this.setBackground(Color.black);
 	}
+	
+	/****** Manage Hot Keys ******/
 
 	@Override
 	public void keyPressed(KeyEvent e){
 		switch(e.getKeyChar()) {
 		case 'q': // Close Program
-			System.exit(0); // break is useless here
+			printLog();
+			System.exit(0);
 			
 		case 's': 
 			/**
@@ -114,23 +112,8 @@ public class GUI extends JFrame implements KeyListener{
 			
 		case 'p': // take picture
 			// First make sure we are not currently taking pictures
-			if(takePic == null || SwingWorker.StateValue.DONE == takePic.getState()) {
-
-				takePic = new Picture(3000, photoCount, vid); // Set picture to current settings
-				takePic.execute(); // Activate SwingWorker to run without freezing cam
-				
-				takePic.addPropertyChangeListener(new PropertyChangeListener(){ 
-
-					@Override
-					public void propertyChange(PropertyChangeEvent arg0) { // Listen for SwingWorker state changes
-						setCount(takePic.getProgress()); // Change Background color
-						if (SwingWorker.StateValue.DONE == takePic.getState()){ // Cam is done taking pictures
-							snapPicture();
-						} 
-
-					}
-				});
-			}
+			if(takePic == null || SwingWorker.StateValue.DONE == takePic.getState())
+				InitiatePicture();
 			break;
 			
 		case 'v': 
@@ -148,6 +131,61 @@ public class GUI extends JFrame implements KeyListener{
 
 	@Override
 	public void keyTyped(KeyEvent e) { /* ignore */ }
+
+	
+	
+	/****** Log Creation Methods ******/
+	
+	/**
+	 * @return Caption for log
+	 */
+	private String makeLog() {
+		return "GUI Log \n=======\n";
+	}
+	
+	/**
+	 * @param message to be added to the log
+	 */
+	private void updateLog(String message) {
+		log += message + "/n";
+	}
+
+	/** 
+	 * Turns the program log into a text file that can be used to observe state of program
+	 */
+	private void printLog() {
+		if(vid != null)
+			log += "\n" + vid.getLog() + "\n";
+		if(set != null)
+			log += "\n" + set.getLog() + "\n";
+		if(takePic != null)
+			log += "\n" + takePic.getLog() + "\n";
+		// Video recording log
+		// TODO: save log
+	}
+	
+	/****** Picture Taking Methods ******/
+	
+	
+	/**
+	 * Set up picture taking thread
+	 */
+	private void InitiatePicture() {
+		takePic = new Picture(3000, photoCount, vid); // Set picture to current settings
+		takePic.execute(); // Activate SwingWorker to run without freezing WebCam
+		
+		takePic.addPropertyChangeListener(new PropertyChangeListener(){ 
+
+			@Override
+			public void propertyChange(PropertyChangeEvent arg0) { // Listen for SwingWorker state changes
+				setCount(takePic.getProgress()); // Change Background color
+				if (SwingWorker.StateValue.DONE == takePic.getState()){ // WebCam is done taking pictures
+					snapPicture();
+				} 
+
+			}
+		});
+	}
 
 	/**
 	 * Records all snapped pictures to file, and sends them to the printer
@@ -173,7 +211,9 @@ public class GUI extends JFrame implements KeyListener{
 			//printJob.print();
 			setCount(5000); // reset background
 			photoSet++;
-		} catch (InterruptedException | ExecutionException | IOException  /*| PrinterException*/ e1) { /* Do Nothing */}
+		} catch (InterruptedException | ExecutionException | IOException  /*| PrinterException*/ e) { 
+			updateLog(e.getMessage());
+		}
 		// ** future versions will log issues for bug detection **
 	}
 
